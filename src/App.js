@@ -6,6 +6,8 @@ import './App.css';
 // Toast notification dependencies
 import { ToastContainer, toast } from 'react-toastify';
 
+const BASE_URL = "https://joes-autos.herokuapp.com/api";
+
 class App extends Component {
   constructor( props ) {
     super( props );
@@ -30,7 +32,10 @@ class App extends Component {
 
   getVehicles() {
     // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    axios.get(`${BASE_URL}/vehicles`).then( response => {
+      toast.success("Got Vehicles");
+      this.setState({vehiclesToDisplay: response.data});
+    }).catch( () => toast.error("Failed to Get Vehicles") );
   }
 
   getPotentialBuyers() {
@@ -39,7 +44,10 @@ class App extends Component {
   }
 
   sellCar( id ) {
-    // axios (DELETE)
+    axios.delete(`${BASE_URL}/vehicles/${id}`).then( response => {
+      toast.success("sellCar = :)");
+      this.setState({vehiclesToDisplay: response.data.vehicles});
+    }).catch( () => toast.error("sellCar = :/"));
     // setState with response -> vehiclesToDisplay
   }
 
@@ -58,8 +66,10 @@ class App extends Component {
   }
 
   updatePrice( priceChange, id ) {
-    // axios (PUT)
-    // setState with response -> vehiclesToDisplay
+    axios.put(`${BASE_URL}/vehicles/${id}/${priceChange}`).then( response => {
+      toast.success("updatePrice = :)");
+      this.setState({vehiclesToDisplay: response.data.vehicles});
+    }).catch( () => toast.error("updatePrice = :/"));
   }
 
   addCar() {
@@ -72,6 +82,10 @@ class App extends Component {
     };
 
     // axios (POST)
+    axios.post(`${BASE_URL}/vehicles`, newCar).then( response => {
+      toast.success("addCar = :)");
+      this.setState({vehiclesToDisplay: response.data.vehicles});
+    }).catch( () => toast.error("addCar = :/"));
     // setState with response -> vehiclesToDisplay
   }
 
