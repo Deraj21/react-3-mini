@@ -31,7 +31,6 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
     axios.get(`${BASE_URL}/vehicles`).then( response => {
       toast.success("Got Vehicles");
       this.setState({vehiclesToDisplay: response.data});
@@ -39,8 +38,10 @@ class App extends Component {
   }
 
   getPotentialBuyers() {
-    // axios (GET)
-    // setState with response -> buyersToDisplay
+    axios.get(`${BASE_URL}/buyers`).then( response => {
+      toast.success("getPotentialBuyers = :)");
+      this.setState({buyersToDisplay: response.data});
+    }).catch( () => toast.error("getPotentialBuyers = :/") );
   }
 
   sellCar( id ) {
@@ -48,21 +49,28 @@ class App extends Component {
       toast.success("sellCar = :)");
       this.setState({vehiclesToDisplay: response.data.vehicles});
     }).catch( () => toast.error("sellCar = :/"));
-    // setState with response -> vehiclesToDisplay
   }
 
   filterByMake() {
     let make = this.refs.selectedMake.value;
-
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    axios.get(`${BASE_URL}/vehicles`).then( response => {
+      toast.success("filterByMake = :)");
+      let filtered = response.data.filter(vehicle => vehicle.make === make);
+      this.setState({vehiclesToDisplay: filtered});
+    }).catch( () => toast.error("filterByMake = :/"));
   }
 
   filterByColor() {
     let color = this.refs.selectedColor.value;
+    console.log(color);
 
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    axios.get(`${BASE_URL}/vehicles`).then( response => {
+      toast.success("filterByColor = :)");
+      let filtered = response.data.filter(vehicle => {
+        return vehicle.color.toLowerCase() === color.toLowerCase();
+      });
+      this.setState( {vehiclesToDisplay: filtered} );
+    }).catch( () => toast.error("filterByColor = :/"));
   }
 
   updatePrice( priceChange, id ) {
@@ -81,12 +89,10 @@ class App extends Component {
       price: this.refs.price.value
     };
 
-    // axios (POST)
     axios.post(`${BASE_URL}/vehicles`, newCar).then( response => {
       toast.success("addCar = :)");
       this.setState({vehiclesToDisplay: response.data.vehicles});
     }).catch( () => toast.error("addCar = :/"));
-    // setState with response -> vehiclesToDisplay
   }
 
   addBuyer() {
@@ -96,27 +102,38 @@ class App extends Component {
       address: this.refs.address.value
     };
 
-    //axios (POST)
-    // setState with response -> buyersToDisplay
+    axios.post(`${BASE_URL}/buyers`,newBuyer).then( response => {
+      toast.success("addBuyer = :)");
+      this.setState({buyersToDisplay: response.data.buyers});
+    }).catch(() => toast.error("addBuyer = :/"));
   }
 
   deleteBuyer( id ) {
-    // axios (DELETE)
-    //setState with response -> buyersToDisplay
+    axios.delete(`${BASE_URL}/buyers/${id}`).then( response => {
+      toast.success("deleteBuyer = :)");
+      this.setState({buyersToDisplay: response.data.buyers});
+    }).catch( () => toast.error("deleteBuyer = :/"));
   }
 
   nameSearch() {
     let searchLetters = this.refs.searchLetters.value;
 
-    // axios (GET)
-    // setState with response -> buyersToDisplay
+    axios.get(`${BASE_URL}/buyers`).then( response => {
+      toast.success("nameSearch = :)");
+      this.setState( {buyersToDisplay: response.data.filter(buyer => buyer.name.includes(searchLetters))} );
+    }).catch( () => toast.error("nameSearch = :/"));
   }
 
   byYear() {
     let year = this.refs.searchYear.value;
 
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    axios.get(`${BASE_URL}/vehicles`).then( response => {
+      toast.success("byYear = :)");
+      this.setState( {vehiclesToDisplay: response.data.filter(vehicle => {
+        console.log(`${vehicle.year} === ${year}`);
+        return vehicle.year == year;
+      } )} );
+    }).catch( () => toast.error("byYear = :/"));
   }
 
   // Do not edit the code below
